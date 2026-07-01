@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VALORANT TRAINING | 战术训练场</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css?v=20260630">
+</head>
+<body>
+    <!-- 加载界面 -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <div class="logo-mark"></div>
+                <div class="logo-text">
+                    <span class="logo-val">VALORANT</span>
+                    <span class="logo-sub">TRAINING GROUND</span>
+                </div>
+            </div>
+            <div class="loading-bar-container">
+                <div class="loading-bar-fill" id="loading-bar"></div>
+                <div class="loading-bar-percent" id="loading-percent">0%</div>
+            </div>
+            <div class="loading-status" id="loading-status">正在初始化战术系统...</div>
+        </div>
+        <div class="loading-bg-grid"></div>
+    </div>
+
+    <!-- 开始界面 - 模式选择 -->
+    <div id="start-screen" class="start-screen hidden">
+        <div class="start-content mode-select-content">
+            <div class="start-header">
+                <div class="header-tag">SELECT GAME MODE</div>
+                <h1 class="start-title">选择模式</h1>
+                <h2 class="start-subtitle">CHOOSE YOUR MISSION</h2>
+            </div>
+
+            <!-- 模式选择卡片 -->
+            <div class="mode-cards">
+                <!-- 训练模式 -->
+                <div class="mode-card" data-mode="training">
+                    <div class="mode-card-header">
+                        <div class="mode-icon training-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <circle cx="12" cy="12" r="6"/>
+                                <circle cx="12" cy="12" r="2"/>
+                            </svg>
+                        </div>
+                        <div class="mode-tag">MODE 01</div>
+                    </div>
+                    <div class="mode-card-title">战术训练</div>
+                    <div class="mode-card-subtitle">TRAINING GROUND</div>
+                    <div class="mode-card-desc">5步递进式新手引导，学习移动、瞄准、射击、换弹等核心操作</div>
+                    <div class="mode-card-stats">
+                        <div class="stat-row">
+                            <span class="stat-key">难度</span>
+                            <span class="stat-val">★☆☆☆☆</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-key">时长</span>
+                            <span class="stat-val">5-8分钟</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-key">武器</span>
+                            <span class="stat-val">幻影步枪</span>
+                        </div>
+                    </div>
+                    <button class="mode-select-btn" id="start-training-btn">
+                        <span>进入训练</span>
+                        <span class="btn-arrow">▶</span>
+                    </button>
+                </div>
+
+                <!-- 怪兽模式 -->
+                <div class="mode-card monster-card" data-mode="monster">
+                    <div class="mode-card-header">
+                        <div class="mode-icon monster-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l2 5v8h16v-8l2-5-10-5z"/>
+                                <path d="M12 7v10M8 12h8"/>
+                            </svg>
+                        </div>
+                        <div class="mode-tag danger">MODE 02</div>
+                    </div>
+                    <div class="mode-card-title">怪兽讨伐</div>
+                    <div class="mode-card-subtitle">MONSTER HUNT</div>
+                    <div class="mode-card-desc">7波递增怪兽来袭！越往后越凶猛，击杀回血，生存到最后获得胜利</div>
+                    <div class="mode-card-stats">
+                        <div class="stat-row">
+                            <span class="stat-key">难度</span>
+                            <span class="stat-val">★★★★☆</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-key">时长</span>
+                            <span class="stat-val">8-12分钟</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-key">武器</span>
+                            <span class="stat-val">能量刀刃</span>
+                        </div>
+                    </div>
+                    <button class="mode-select-btn danger-btn" id="start-monster-btn">
+                        <span>开始讨伐</span>
+                        <span class="btn-arrow">▶</span>
+                    </button>
+                </div>
+
+                <!-- 人机对决模式 -->
+                <div class="mode-card bot-card" data-mode="bot">
+                    <div class="mode-card-header">
+                        <div class="mode-icon bot-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/>
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                                <line x1="9" y1="9" x2="9.01" y2="9"/>
+                                <line x1="15" y1="9" x2="15.01" y2="9"/>
+                            </svg>
+                        </div>
+                        <div class="mode-tag pvp">MODE 03</div>
+                    </div>
+                    <div class="mode-card-title">人机对决</div>
+                    <div class="mode-card-subtitle">BOT DEATHMATCH</div>
+                    <div class="mode-card-desc">1v3智能AI对手，会移动、射击、躲避！淘汰所有敌人即可获胜</div>
+                    <div class="mode-card-stats">
+                        <div class="stat-row">
+                            <span class="stat-key">难度</span>
+                            <span class="stat-val">★★★★★</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-key">时长</span>
+                            <span class="stat-val">5-10分钟</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-key">武器</span>
+                            <span class="stat-val">自由选择</span>
+                        </div>
+                    </div>
+                    <button class="mode-select-btn pvp-btn" id="start-bot-btn">
+                        <span>开始对决</span>
+                        <span class="btn-arrow">▶</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 灵敏度设置 -->
+            <div class="sensitivity-setting">
+                <div class="setting-label">鼠标灵敏度</div>
+                <div class="sensitivity-options">
+                    <button class="sens-btn" data-sens="low">低</button>
+                    <button class="sens-btn active" data-sens="medium">中（推荐）</button>
+                    <button class="sens-btn" data-sens="high">高</button>
+                </div>
+            </div>
+
+            <!-- 次级按钮：设置/武器选择 -->
+            <div class="menu-secondary-buttons">
+                <button class="menu-secondary-btn" id="open-settings-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                    <span>设置</span>
+                </button>
+                <button class="menu-secondary-btn" id="open-weapon-select-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14.5 17.5L3 6V3h3l11.5 11.5"/>
+                        <path d="M13 19l6-6"/>
+                        <path d="M16 16l4 4"/>
+                        <path d="M19 21l2-2"/>
+                    </svg>
+                    <span>武器库</span>
+                </button>
+                <button class="menu-secondary-btn" id="open-skin-select-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z"/>
+                    </svg>
+                    <span>皮肤库</span>
+                </button>
+            </div>
+
+            <div class="start-hint">选择模式后点击按钮锁定鼠标视角 · 按 ESC 退出锁定 · 按 TAB 查看计分板</div>
+        </div>
+        <div class="start-bg-pattern"></div>
+    </div>
+
+    <!-- 游戏画布 -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- 游戏HUD -->
+    <div id="game-hud" class="game-hud hidden">
+        <!-- FPS计数器 -->
+        <div class="fps-counter" id="fps-counter">
+            FPS <span class="fps-value" id="fps-value">60</span>
+        </div>
+
+        <!-- 战术罗盘 -->
+        <div class="tactical-compass" id="tactical-compass">
+            <div class="compass-strip" id="compass-strip"></div>
+            <div class="compass-needle"></div>
+        </div>
+
+        <!-- 击杀提示 -->
+        <div class="kill-feed" id="kill-feed"></div>
+
+        <!-- 开镜遮罩（ADS时显示，屏幕边缘变暗） -->
+        <div class="ads-overlay" id="ads-overlay"></div>
+
+        <!-- 战术小地图 -->
+        <div class="minimap-container" id="minimap-container"></div>
+
+        <!-- 顶部教程进度条 -->
+        <div class="hud-top">
+            <div class="tutorial-progress">
+                <div class="progress-label">TRAINING PROGRESS</div>
+                <div class="progress-steps" id="progress-steps">
+                    <div class="step active" data-step="0"><span class="step-num">01</span><span class="step-name">移动</span></div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="1"><span class="step-num">02</span><span class="step-name">视角</span></div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="2"><span class="step-num">03</span><span class="step-name">射击</span></div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="3"><span class="step-num">04</span><span class="step-name">换弹</span></div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="4"><span class="step-num">05</span><span class="step-name">战斗</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 中央准星 -->
+        <div class="hud-center">
+            <div class="crosshair" id="crosshair">
+                <div class="crosshair-dot"></div>
+                <div class="crosshair-line crosshair-top"></div>
+                <div class="crosshair-line crosshair-bottom"></div>
+                <div class="crosshair-line crosshair-left"></div>
+                <div class="crosshair-line crosshair-right"></div>
+            </div>
+            <div class="hit-marker" id="hit-marker"></div>
+            <div class="damage-numbers" id="damage-numbers"></div>
+        </div>
+
+        <!-- 右上任务面板 -->
+        <div class="hud-right">
+            <div class="mission-card" id="mission-card">
+                <div class="mission-header">
+                    <span class="mission-tag" id="mission-tag">TASK 01</span>
+                    <span class="mission-status" id="mission-status">进行中</span>
+                </div>
+                <div class="mission-title" id="mission-title">移动训练</div>
+                <div class="mission-desc" id="mission-desc">使用 W A S D 键移动角色</div>
+                <div class="mission-progress">
+                    <div class="mission-progress-bar" id="mission-progress-bar"></div>
+                    <div class="mission-progress-text" id="mission-progress-text">0 / 20m</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部状态栏 -->
+        <div class="hud-bottom">
+            <div class="hud-bottom-left">
+                <div class="health-container">
+                    <div class="health-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </div>
+                    <div class="health-bar-container">
+                        <div class="health-bar-fill" id="health-bar"></div>
+                        <div class="health-bar-text" id="health-text">100</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hud-bottom-center">
+                <div class="key-prompts" id="key-prompts"></div>
+            </div>
+            <div class="hud-bottom-right">
+                <div class="ammo-container">
+                    <div class="weapon-name">PHANTOM</div>
+                    <div class="ammo-display">
+                        <span class="ammo-current" id="ammo-current">30</span>
+                        <span class="ammo-separator">/</span>
+                        <span class="ammo-magazine" id="ammo-magazine">30</span>
+                    </div>
+                    <div class="reload-indicator" id="reload-indicator">
+                        <div class="reload-text">RELOADING</div>
+                        <div class="reload-bar"><div class="reload-bar-fill" id="reload-bar-fill"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 暂停提示 -->
+        <div class="pause-hint" id="pause-hint">
+            <div class="pause-content">
+                <div class="pause-title">已暂停</div>
+                <div class="pause-text">点击屏幕继续训练</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 怪兽模式HUD -->
+    <div id="monster-hud" class="game-hud monster-hud hidden">
+        <!-- FPS计数器 -->
+        <div class="fps-counter" id="monster-fps-counter">
+            FPS <span class="fps-value" id="monster-fps-value">60</span>
+        </div>
+
+        <!-- 战术罗盘 -->
+        <div class="tactical-compass" id="monster-tactical-compass">
+            <div class="compass-strip" id="monster-compass-strip"></div>
+            <div class="compass-needle"></div>
+        </div>
+
+        <!-- 击杀提示 -->
+        <div class="kill-feed" id="monster-kill-feed"></div>
+
+        <!-- 动态准星（4条线围绕中心点，随移动/射击扩散） -->
+        <div class="monster-dynamic-crosshair" id="monster-dynamic-crosshair">
+            <div class="mdc-line mdc-top"></div>
+            <div class="mdc-line mdc-bottom"></div>
+            <div class="mdc-line mdc-left"></div>
+            <div class="mdc-line mdc-right"></div>
+            <div class="mdc-center"></div>
+        </div>
+    </div>
+
+    <!-- 怪兽模式结算界面 -->
+    <div id="monster-result-screen" class="completion-screen hidden">
+        <div class="completion-content monster-result-content">
+            <div class="completion-header">
+                <div class="result-tag victory" id="monster-result-tag">VICTORY</div>
+                <h1 class="completion-title" id="monster-result-title">战斗胜利</h1>
+                <div class="completion-subtitle">MONSTER HUNT COMPLETE</div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">击杀怪兽</div>
+                    <div class="stat-value" id="stat-monsters-killed">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">造成伤害</div>
+                    <div class="stat-value" id="stat-damage-dealt">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">承受伤害</div>
+                    <div class="stat-value" id="stat-damage-taken">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">波次进度</div>
+                    <div class="stat-value" id="stat-waves">0 / 7</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">用时</div>
+                    <div class="stat-value" id="stat-monster-time">0:00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">评级</div>
+                    <div class="stat-value" id="stat-monster-rank">S</div>
+                </div>
+            </div>
+            <button id="monster-restart-button" class="restart-button">
+                <span class="btn-text">再次挑战</span>
+                <span class="btn-arrow">↻</span>
+            </button>
+            <button id="back-to-menu-button" class="back-button">
+                <span class="btn-text">返回菜单</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 人机对决HUD -->
+    <div id="bot-hud" class="game-hud bot-hud hidden">
+        <!-- 内容由 BotHUD.js 动态生成 -->
+    </div>
+
+    <!-- 人机对决结算界面 -->
+    <div id="bot-result-screen" class="completion-screen hidden">
+        <div class="completion-content monster-result-content">
+            <div class="completion-header">
+                <div class="result-tag victory" id="bot-result-tag">VICTORY</div>
+                <h1 class="completion-title" id="bot-result-title">对决胜利</h1>
+                <div class="completion-subtitle">BOT DEATHMATCH</div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">击杀敌人</div>
+                    <div class="stat-value" id="bot-stat-kills">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">命中率</div>
+                    <div class="stat-value" id="bot-stat-accuracy">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">造成伤害</div>
+                    <div class="stat-value" id="bot-stat-damage">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">承受伤害</div>
+                    <div class="stat-value" id="bot-stat-taken">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">用时</div>
+                    <div class="stat-value" id="bot-stat-time">0:00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">评级</div>
+                    <div class="stat-value" id="bot-stat-rank">S</div>
+                </div>
+            </div>
+            <button id="bot-restart-button" class="restart-button">
+                <span class="btn-text">再来一局</span>
+            </button>
+            <button id="bot-back-button" class="back-to-menu-button">
+                <span class="btn-text">返回菜单</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 完成界面 -->
+    <div id="completion-screen" class="completion-screen hidden">
+        <div class="completion-content">
+            <div class="completion-header">
+                <div class="completion-tag">TRAINING COMPLETE</div>
+                <h1 class="completion-title">训练完成</h1>
+                <div class="completion-subtitle">MISSION ACCOMPLISHED</div>
+            </div>
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">命中数</div>
+                    <div class="stat-value" id="stat-hits">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">命中率</div>
+                    <div class="stat-value" id="stat-accuracy">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">击毁靶标</div>
+                    <div class="stat-value" id="stat-destroyed">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">换弹次数</div>
+                    <div class="stat-value" id="stat-reloads">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">用时</div>
+                    <div class="stat-value" id="stat-time">0:00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">评级</div>
+                    <div class="stat-value" id="stat-rank">S</div>
+                </div>
+            </div>
+            <button id="restart-button" class="restart-button">
+                <span class="btn-text">重新训练</span>
+                <span class="btn-arrow">↻</span>
+            </button>
+            <button id="training-back-menu-button" class="back-button">
+                <span class="btn-text">返回菜单</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 设置面板 -->
+    <div class="settings-overlay" id="settings-overlay">
+        <div class="settings-panel">
+            <div class="settings-header">
+                <div class="settings-title">设置</div>
+                <button class="settings-close" id="settings-close">×</button>
+            </div>
+            <div class="settings-body">
+                <!-- 控制设置 -->
+                <div class="settings-section">
+                    <div class="settings-section-title">控制设置</div>
+                    <div class="settings-row">
+                        <div class="settings-row-label">鼠标灵敏度</div>
+                        <div class="settings-row-control">
+                            <div class="val-slider" id="sens-slider" data-min="0.5" data-max="5" data-step="0.1">
+                                <div class="val-slider-fill"></div>
+                                <div class="val-slider-thumb"></div>
+                            </div>
+                            <div class="val-slider-value" id="sens-value">2.2</div>
+                        </div>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-row-label">反向鼠标Y轴</div>
+                        <div class="settings-row-control">
+                            <div class="val-toggle" id="invert-y-toggle"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 音频设置 -->
+                <div class="settings-section">
+                    <div class="settings-section-title">音频设置</div>
+                    <div class="settings-row">
+                        <div class="settings-row-label">主音量</div>
+                        <div class="settings-row-control">
+                            <div class="val-slider" id="master-volume-slider" data-min="0" data-max="100" data-step="1">
+                                <div class="val-slider-fill"></div>
+                                <div class="val-slider-thumb"></div>
+                            </div>
+                            <div class="val-slider-value" id="master-volume-value">80</div>
+                        </div>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-row-label">音效音量</div>
+                        <div class="settings-row-control">
+                            <div class="val-slider" id="sfx-volume-slider" data-min="0" data-max="100" data-step="1">
+                                <div class="val-slider-fill"></div>
+                                <div class="val-slider-thumb"></div>
+                            </div>
+                            <div class="val-slider-value" id="sfx-volume-value">90</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 画面设置 -->
+                <div class="settings-section">
+                    <div class="settings-section-title">画面设置</div>
+                    <div class="settings-row">
+                        <div class="settings-row-label">阴影质量</div>
+                        <div class="settings-row-control">
+                            <div class="val-options" id="shadow-quality">
+                                <button class="val-option" data-value="off">关闭</button>
+                                <button class="val-option active" data-value="low">低</button>
+                                <button class="val-option" data-value="high">高</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-row-label">显示FPS</div>
+                        <div class="settings-row-control">
+                            <div class="val-toggle on" id="show-fps-toggle"></div>
+                        </div>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-row-label">视野范围</div>
+                        <div class="settings-row-control">
+                            <div class="val-slider" id="fov-slider" data-min="70" data-max="110" data-step="1">
+                                <div class="val-slider-fill"></div>
+                                <div class="val-slider-thumb"></div>
+                            </div>
+                            <div class="val-slider-value" id="fov-value">90</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-footer">
+                <button class="settings-btn" id="settings-reset-btn">恢复默认</button>
+                <button class="settings-btn primary" id="settings-apply-btn">应用</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 武器选择面板 -->
+    <div class="weapon-select-overlay" id="weapon-select-overlay">
+        <div class="weapon-select-panel">
+            <div class="weapon-select-header">
+                <div class="weapon-select-title">武器库</div>
+                <div class="weapon-select-subtitle">SELECT YOUR WEAPON</div>
+            </div>
+            <div class="weapon-grid" id="weapon-grid">
+                <!-- 武器卡片由JS动态生成 -->
+            </div>
+            <div class="weapon-select-footer">
+                <div class="weapon-select-hint">点击选择武器 · 不同武器拥有不同属性</div>
+                <button class="weapon-confirm-btn" id="weapon-confirm-btn" disabled>确认装备</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 皮肤选择面板 -->
+    <div class="skin-select-overlay" id="skin-select-overlay">
+        <div class="skin-select-panel">
+            <div class="skin-select-header">
+                <div class="skin-select-title">皮肤库</div>
+                <div class="skin-select-subtitle">WEAPON SKINS</div>
+                <button class="skin-close-btn" id="skin-close-btn">✕</button>
+            </div>
+            <div class="skin-weapon-tabs" id="skin-weapon-tabs">
+                <!-- 武器Tab由JS动态生成 -->
+            </div>
+            <div class="skin-content">
+                <div class="skin-grid" id="skin-grid">
+                    <!-- 皮肤卡片由JS动态生成 -->
+                </div>
+                <div class="skin-preview-panel" id="skin-preview">
+                    <!-- 预览信息由JS动态生成 -->
+                </div>
+            </div>
+            <div class="skin-select-footer">
+                <div class="skin-select-hint">切换武器Tab查看不同皮肤 · 稀有度越高特效越炫</div>
+                <button class="skin-confirm-btn" id="skin-confirm-btn" disabled>确认装备</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 计分板 -->
+    <div class="scoreboard-overlay" id="scoreboard-overlay">
+        <div class="scoreboard-panel">
+            <div class="scoreboard-header">
+                <div class="scoreboard-title" id="scoreboard-title">战术训练</div>
+                <div class="scoreboard-mode" id="scoreboard-mode">TRAINING GROUND</div>
+            </div>
+            <table class="scoreboard-table">
+                <thead>
+                    <tr>
+                        <th>玩家</th>
+                        <th class="num">命中</th>
+                        <th class="num">击毁</th>
+                        <th class="num">命中率</th>
+                        <th class="num">伤害</th>
+                        <th class="num">得分</th>
+                    </tr>
+                </thead>
+                <tbody id="scoreboard-body">
+                    <!-- 由JS动态生成 -->
+                </tbody>
+            </table>
+            <div class="scoreboard-footer">按住 TAB 键查看 · 松开关闭</div>
+        </div>
+    </div>
+
+    <!-- 增强暂停菜单 -->
+    <div class="pause-menu" id="pause-menu">
+        <div class="pause-menu-content">
+            <div class="pause-menu-title">已暂停</div>
+            <div class="pause-menu-subtitle">PAUSED</div>
+            <div class="pause-menu-buttons">
+                <button class="pause-menu-btn primary" id="pause-resume-btn">
+                    <span>继续游戏</span>
+                    <span class="btn-arrow">▶</span>
+                </button>
+                <button class="pause-menu-btn" id="pause-settings-btn">
+                    <span>设置</span>
+                    <span class="btn-arrow">▶</span>
+                </button>
+                <button class="pause-menu-btn" id="pause-restart-btn">
+                    <span>重新开始</span>
+                    <span class="btn-arrow">↻</span>
+                </button>
+                <button class="pause-menu-btn" id="pause-menu-back-btn">
+                    <span>返回主菜单</span>
+                    <span class="btn-arrow">◀</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast通知容器 -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- 波次过渡动画 -->
+    <div class="wave-transition" id="wave-transition">
+        <div class="wave-transition-content">
+            <div class="wave-transition-tag" id="wave-transition-tag">WAVE INCOMING</div>
+            <div class="wave-transition-title" id="wave-transition-title">第 1 波</div>
+            <div class="wave-transition-subtitle" id="wave-transition-subtitle">PREPARE FOR COMBAT</div>
+        </div>
+    </div>
+
+    <!-- Three.js Importmap -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="scripts/main.js?v=20260625"></script>
+    <script>
+        // 动态准星 - 注入到monster-hud并响应移动/射击扩散
+        (function () {
+            const crosshairHTML = `
+                <div class="monster-dynamic-crosshair" id="monster-dynamic-crosshair">
+                    <div class="mdc-line mdc-top"></div>
+                    <div class="mdc-line mdc-bottom"></div>
+                    <div class="mdc-line mdc-left"></div>
+                    <div class="mdc-line mdc-right"></div>
+                    <div class="mdc-center"></div>
+                </div>`;
+
+            // 将准星注入到monster-hud-center（MonsterHUD创建内容后调用）
+            function injectCrosshair() {
+                const center = document.querySelector('#monster-hud .monster-hud-center');
+                if (center && !center.querySelector('.monster-dynamic-crosshair')) {
+                    center.insertAdjacentHTML('beforeend', crosshairHTML);
+                }
+            }
+
+            // 观察monster-hud变化，确保准星在MonsterHUD重建内容后仍存在
+            const hud = document.getElementById('monster-hud');
+            if (hud) {
+                const observer = new MutationObserver(() => injectCrosshair());
+                observer.observe(hud, { childList: true, subtree: true });
+            }
+
+            // 移动键状态追踪 - 移动时准星扩散
+            const moveKeys = new Set();
+            const moveKeyCodes = ['KeyW', 'KeyA', 'KeyS', 'KeyD'];
+
+            function updateSpread() {
+                const crosshair = document.getElementById('monster-dynamic-crosshair');
+                if (!crosshair) return;
+                if (moveKeys.size > 0) {
+                    crosshair.classList.add('spread');
+                } else {
+                    crosshair.classList.remove('spread');
+                }
+            }
+
+            document.addEventListener('keydown', (e) => {
+                if (moveKeyCodes.includes(e.code)) {
+                    moveKeys.add(e.code);
+                    updateSpread();
+                }
+            });
+
+            document.addEventListener('keyup', (e) => {
+                if (moveKeyCodes.includes(e.code)) {
+                    moveKeys.delete(e.code);
+                    updateSpread();
+                }
+            });
+
+            // 射击时准星扩散（左键按下扩散，松开恢复）
+            let fireRecoverTimer = null;
+            document.addEventListener('mousedown', (e) => {
+                if (e.button === 0) {
+                    const crosshair = document.getElementById('monster-dynamic-crosshair');
+                    if (crosshair) crosshair.classList.add('firing');
+                    if (fireRecoverTimer) clearTimeout(fireRecoverTimer);
+                }
+            });
+
+            document.addEventListener('mouseup', (e) => {
+                if (e.button === 0) {
+                    if (fireRecoverTimer) clearTimeout(fireRecoverTimer);
+                    fireRecoverTimer = setTimeout(() => {
+                        const crosshair = document.getElementById('monster-dynamic-crosshair');
+                        if (crosshair) crosshair.classList.remove('firing');
+                    }, 120);
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

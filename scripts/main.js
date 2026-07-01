@@ -6,6 +6,8 @@ import { Game } from './core/Game.js';
 
 // 创建游戏实例
 const game = new Game();
+// 暴露到全局，方便调试和测试
+window.game = game;
 
 // 启动游戏
 async function bootstrap() {
@@ -106,6 +108,22 @@ async function bootstrap() {
                 game.toast.show('欢迎来到训练场', '选择模式开始训练 · 按 TAB 查看计分板', 'success', 4000);
             }
         }, 1000);
+
+        // URL 参数：自动进入指定模式或面板（用于截图/测试）
+        const params = new URLSearchParams(window.location.search);
+        const autoMode = params.get('mode');
+        const autoShow = params.get('show');
+        if (autoMode === 'training') {
+            game.start();
+        } else if (autoMode === 'monster') {
+            game.startMonsterMode();
+        } else if (autoMode === 'bot') {
+            game.startBotMode();
+        } else if (autoShow === 'skins') {
+            game.skinSelect.show();
+        } else if (autoShow === 'weapons') {
+            game.weaponSelect.show();
+        }
 
         console.log('%c VALORANT TRAINING GROUND ', 'background: #FF4655; color: #ECE8E1; font-weight: bold; padding: 4px 8px;');
         console.log('%c 战术训练场已就绪 ', 'color: #FF4655; font-size: 12px;');
